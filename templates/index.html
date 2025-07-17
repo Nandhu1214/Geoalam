@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoAlarm - Location-Based Alarms</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/styles.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAi04t-jqg9Jg0C5Odf1jUXK84vwykimmI&libraries=places&callback=initMap" async defer></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                </div>
+                <h1 class="app-title">GeoAlarm</h1>
+            </div>
+            <p class="subtitle">Get notified when you reach your destination</p>
+        </header>
+
+        <div class="main-layout">
+            <!-- Main Interface -->
+            <div class="main-interface">
+                <!-- Create New Alarm Card -->
+                <div class="card glass-effect">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Create New Alarm
+                        </h2>
+                    </div>
+                    
+                    <div class="card-content">
+                        <!-- Location Input -->
+                        <div class="form-group">
+                            <label for="destination" class="form-label">Destination</label>
+                            <div class="input-group">
+                                <input type="text" id="destination" class="form-input" placeholder="Enter destination or address...">
+                                <button class="map-button" type="button">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="3 6 9 12 3 18 21 12"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Current Location Toggle -->
+                        <div class="toggle-section">
+                            <label class="toggle-container">
+                                <input type="checkbox" class="toggle-input">
+                                <span class="toggle-slider"></span>
+                                <div class="toggle-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+                                    </svg>
+                                    Use my current location as start point
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Radius Slider -->
+                        <div class="form-group">
+                            <label for="radius" class="form-label">Alert Radius: <span id="radius-value">500</span>m</label>
+                            <div class="slider-container">
+                                <input type="range" id="radius" class="slider" min="50" max="5000" value="500" step="50">
+                                <div class="slider-labels">
+                                    <span>50m</span>
+                                    <span>5000m</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Alarm Tone Selection -->
+                        <div class="form-group">
+                            <label for="tone" class="form-label">Alarm Tone</label>
+                            <select id="tone" class="form-select">
+                                <option value="">Choose an alarm tone...</option>
+                                <option value="bell">🔔 Bell</option>
+                                <option value="chime">🎵 Chime</option>
+                                <option value="notification">📱 Notification</option>
+                                <option value="alarm">⏰ Classic Alarm</option>
+                                <option value="gentle">🌸 Gentle Wake</option>
+                            </select>
+                        </div>
+
+                        <!-- Set Alarm Button -->
+                        <button class="primary-button" type="button">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                            </svg>
+                            Set Location Alarm
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Active Alarms Section -->
+                <div class="card glass-effect">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                            </svg>
+                            Active Alarms (2)
+                        </h2>
+                    </div>
+                    
+                    <div class="card-content">
+                        <!-- Sample Active Alarms -->
+                        <div class="alarm-item">
+                            <div class="alarm-info">
+                                <div class="alarm-destination">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                    Kariyavattom campus
+                                </div>
+                                <div class="alarm-details">100m radius • 🔔 Bell</div>
+                            </div>
+                            <button class="delete-button" type="button">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3,6 5,6 21,6"/>
+                                    <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"/>
+                                    <line x1="10" y1="11" x2="10" y2="17"/>
+                                    <line x1="14" y1="11" x2="14" y2="17"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="alarm-item">
+                            <div class="alarm-info">
+                                <div class="alarm-destination">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                    Hymavati pond
+                                </div>
+                                <div class="alarm-details">250m radius • 🎵 Chime</div>
+                            </div>
+                            <button class="delete-button" type="button">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3,6 5,6 21,6"/>
+                                    <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"/>
+                                    <line x1="10" y1="11" x2="10" y2="17"/>
+                                    <line x1="14" y1="11" x2="14" y2="17"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map Preview Section -->
+            <div class="map-section">
+                <div class="card glass-effect map-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="3 6 9 12 3 18 21 12"/>
+                            </svg>
+                            Map Preview
+                        </h2>
+                    </div>
+                    
+                    <div class="map-container">
+                        <div class="map-placeholder">
+                            <div id="map" style="width: 100%; height: 100%; border-radius: 0 0 1rem 1rem;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>🌍 Never miss your destination again with GeoAlarm's smart location alerts</p>
+        </footer>
+    </div>
+
+     
+    <!-- Include the interactive JavaScript -->
+    <script src="../static/script.js"></script>
+</body>
+</html>
