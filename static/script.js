@@ -1,5 +1,5 @@
 // GeoAlarm Interactive JavaScript
-
+let userMarker = null;
 const destinationInput = document.getElementById('destination');
 const mapButton = document.querySelector('.map-button');
 const currentLocationToggle = document.querySelector('.toggle-input');
@@ -57,6 +57,54 @@ function initializeEventListeners() {
         }, 3000);
     }
 }
+
+function trackUserLocationOnMap() {
+    if (!navigator.geolocation) {
+        alert("Geolocation is not supported in this browser.");
+        return;
+    }
+
+    navigator.geolocation.watchPosition(
+        (position) => {
+            const userLatLng = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            if (!userMarker) {
+                userMarker = new google.maps.Marker({
+                    position: userLatLng,
+                    map: map,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 8,
+                        fillColor: '#3b82f6',  // blue
+                        fillOpacity: 1,
+                        strokeWeight: 2,
+                        strokeColor: '#fff'
+                    },
+                    title: "You are here"
+                });
+            } else {
+                userMarker.setPosition(userLatLng);
+            }
+
+            // Optional: center map on user the first time
+            if (!map.getBounds().contains(userLatLng)) {
+                map.setCenter(userLatLng);
+            }
+        },
+        (error) => {
+            console.error("Error getting user location:", error.message);
+        },
+        {
+            enableHighAccuracy: true,
+            maximumAge: 10000,
+            timeout: 10000
+        }
+    );
+}
+
 
 function updateRadiusDisplay() {
     radiusValue.textContent = radiusSlider.value;
@@ -294,6 +342,7 @@ let alarmCircle;
 
 function initMap() {
     const center = { lat: 8.5241, lng: 76.9366 }; // Default to Trivandrum
+    trackUserLocationOnMap();
 
     map = new google.maps.Map(document.getElementById("map"), {
         center,
