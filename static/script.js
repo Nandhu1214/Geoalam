@@ -95,11 +95,13 @@ function handleSetAlarm() {
     }
 
     const newAlarm = {
-        id: Date.now(),
-        destination,
-        radius,
-        tone
-    };
+    id: Date.now(),
+    destination,
+    radius,
+    tone,
+    lat: marker?.getPosition().lat(),
+    lng: marker?.getPosition().lng()
+};
 
     fetch('/api/alarms', {
         method: 'POST',
@@ -288,6 +290,7 @@ console.log('🌍 GeoAlarm initialized with Flask backend!');
 let map;
 let marker;
 let geocoder;
+let alarmCircle;
 
 function initMap() {
     const center = { lat: 8.5241, lng: 76.9366 }; // Default to Trivandrum
@@ -355,6 +358,32 @@ function placeMarker(location) {
             map,
         });
     }
+
+    drawRadiusCircle(location); 
+}
+
+function drawRadiusCircle(center) {
+    const radius = parseInt(radiusSlider.value);
+
+    if (alarmCircle) {
+        alarmCircle.setMap(null); // remove old one
+    }
+
+    alarmCircle = new google.maps.Circle({
+        map,
+        center,
+        radius: radius, // in meters
+        fillColor: '#0ea5e9',
+        fillOpacity: 0.2,
+        strokeColor: '#0284c7',
+        strokeOpacity: 0.7,
+        strokeWeight: 2
+    });
+
+    // When user adjusts radius slider, update circle
+    radiusSlider.addEventListener('input', () => {
+        alarmCircle.setRadius(parseInt(radiusSlider.value));
+    });
 }
 
 function reverseGeocode(latlng) {
